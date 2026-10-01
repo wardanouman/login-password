@@ -93,7 +93,7 @@ export default function Login() {
             }}
             className="text-xs text-blue-600 hover:underline font-medium"
           >
-            {isRegister ? 'Already have an account? Sign In' : 'New to MarketHub? Create an account'}
+            {isRegister ? 'Already have an account? Log In' : 'New to MarketHub? Create an account'}
           </button>
         </div>
 
