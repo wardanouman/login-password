@@ -6,6 +6,7 @@ export default function Dashboard() {
   const [products, setProducts] = useState([]);
   const [search, setSearch] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('All');
+  const [loading, setLoading]= useState(true);
 
   // Form State
   const [title, setTitle] = useState('');
@@ -14,13 +15,16 @@ export default function Dashboard() {
   const [stock, setStock] = useState('');
   const [image, setImage] = useState('');
 
-  // Fetch Products from MongoDB
+ // Fetch Products from MongoDB
   const fetchProducts = async () => {
     try {
+      setLoading(true);
       const res = await API.get('/products');
       setProducts(res.data);
     } catch (err) {
       console.error("Error loading products:", err);
+    } finally {
+      setLoading(false); // <--- Crucial: Stop loading state
     }
   };
 
@@ -28,24 +32,25 @@ export default function Dashboard() {
     fetchProducts();
   }, []);
 
- const handleAddProduct = async (e) => {
-  e.preventDefault();
-  if (!title || !price || !stock) return;
+  const handleAddProduct = async (e) => {
+    e.preventDefault();
+    if (!title || !price || !stock) return;
 
-  try {
-    await API.post('/products', { 
-      title, 
-      price, 
-      category, 
-      stock, 
-      image: image || "https://via.placeholder.com/300x300?text=No+Product+Image" 
-    });
-    setTitle(''); setPrice(''); setStock(''); setImage('');
-    fetchProducts();
-  } catch (err) {
-    alert("Failed to add product");
-  }
-};
+    try {
+      await API.post('/products', {
+        title,
+        price: parseFloat(price),
+        category,
+        stock: parseInt(stock, 10),
+        // Checks if image is empty or whitespace
+        image: image.trim() !== '' ? image : "https://via.placeholder.com/300x300?text=No+Product+Image"
+      });
+      setTitle(''); setPrice(''); setStock(''); setImage('');
+      fetchProducts();
+    } catch (err) {
+      alert("Failed to add product");
+    }
+  };
 
   const handleDelete = async (id) => {
     try {
