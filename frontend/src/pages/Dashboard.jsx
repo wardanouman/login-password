@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Navbar from '../components/Navbar';
-import API from '../api/tempInstance';
+import API from '../api/axiosInstance';
 
 export default function Dashboard() {
   const [products, setProducts] = useState([]);
