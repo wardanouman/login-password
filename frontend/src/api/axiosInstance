@@ -1,7 +1,13 @@
 import axios from 'axios';
 
+interface ImportMetaEnv {
+  readonly VITE_API_BASE_URL?: string;
+}
+
 const API = axios.create({
-  baseURL: import.meta.env.VITE_API_BASE_URL || 'http://localhost:5050',
+  baseURL:
+    (import.meta as ImportMeta & { env?: ImportMetaEnv }).env?.VITE_API_BASE_URL ||
+    'http://localhost:5050',
 });
 
 API.interceptors.request.use((config) => {
